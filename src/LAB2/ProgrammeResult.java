@@ -1,5 +1,5 @@
 package LAB2;
-
+//Результат работы программы/подпрограммы
 public class ProgrammeResult{
     private String message;
     private boolean isSuccessful;
