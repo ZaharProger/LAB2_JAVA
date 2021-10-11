@@ -27,6 +27,7 @@ public class Main {
             return result;
         };
 
+        ProgrammeResult<Short> result;
 
     }
 }
