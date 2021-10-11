@@ -12,25 +12,20 @@ public class Matrix implements Serializable {
     public Matrix(){
         size = 3;
         elements = new double[size][size];
+        short i = 0;
+        fillMatrixByRandom();
     }
 
     public Matrix(short size){
         this.size = size;
         elements = new double[size][size];
+        fillMatrixByRandom();
     }
 
     public Matrix(Matrix matrix){
         this.size = matrix.size;
         elements = new double[size][size];
-        short i = 0;
-        while (i < size){
-            short j = 0;
-            while (j < size){
-                elements[i][j] = matrix.elements[i][j];
-                ++j;
-            }
-            ++i;
-        }
+        fillMatrix(matrix.elements);
     }
 
     public ProgrammeResult<String> serialize(String filename){
@@ -74,12 +69,27 @@ public class Matrix implements Serializable {
         this.size = size;
     }
 
-    public void setElements(double[][] elements){
+    public void fillMatrix(double[][] elements){
         short i = 0;
         while (i < size){
             short j = 0;
             while (j < size){
                 this.elements[i][j] = elements[i][j];
+                ++j;
+            }
+            ++i;
+        }
+    }
+
+    public void fillMatrixByRandom(){
+        short i = 0;
+        while (i < size){
+            short j = 0;
+            while (j < size){
+                if (i + j % 2 == 0)
+                    elements[i][j] = Math.random() * 1000;
+                else
+                    elements[i][j] = -(Math.random() * 1000);
                 ++j;
             }
             ++i;
