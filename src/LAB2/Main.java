@@ -9,7 +9,7 @@ public class Main {
     public static final DecimalFormat precision = new DecimalFormat("0.000");
 
     public static void main(String[] args) {
-        Analyzable<Short> numAnalyzer = (String data, short bottomLim, short topLim) ->{
+        Analyzable<Short> analyzer = (String data, short bottomLim, short topLim) ->{
             ProgrammeResult<Short> result = new ProgrammeResult<>("Получены корректные данные!", true, (short) 0);
             short parsedData = 0;
             try{
@@ -31,7 +31,7 @@ public class Main {
         };
 
         ProgrammeResult<Short> result;
-        do result = MenuLauncher.launchMainMenu(numAnalyzer); while (result.getValue() != 0);
+        do result = MenuLauncher.launchMainMenu(analyzer); while (result.getValue() != 0);
         System.out.println(result.getMessage());
     }
 }
