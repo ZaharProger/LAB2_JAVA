@@ -37,7 +37,7 @@ public class StringEditor implements Serializable {
 
     public ProgrammeResult<String> serialize(String filename){
         String path = "src//LAB2//" + filename + ".ser";
-        ProgrammeResult<String> result = new ProgrammeResult<>("Объект успешно сериализован!", true, path);
+        ProgrammeResult<String> result = new ProgrammeResult<>("Объект успешно сериализован!", true, filename);
         try(FileOutputStream destination =  new FileOutputStream(path);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(destination))
         {
