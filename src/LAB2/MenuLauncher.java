@@ -123,7 +123,7 @@ public class MenuLauncher {
                     inputData = in.nextLine();
                     ProgrammeResult<String> serializationResult = matrix.serialize(inputData);
                     System.out.println(serializationResult.getMessage());
-                    System.out.printf("Теперь вы можете создавать копии на основе матрицы по данной директории: %s\n", serializationResult.getValue());
+                    System.out.printf("Теперь вы можете создавать копии на основе матрицы: %s\n", serializationResult.getValue());
                 }
                 case 0 -> {
                     result.setValue((short) 0);
@@ -210,7 +210,7 @@ public class MenuLauncher {
                     inputData = in.nextLine();
                     ProgrammeResult<String> serializationResult = stringEditor.serialize(inputData);
                     System.out.println(serializationResult.getMessage());
-                    System.out.printf("Теперь вы можете создавать копии на основе данного объекта по данной директории: %s\n", serializationResult.getValue());
+                    System.out.printf("Теперь вы можете создавать копии на основе объекта: %s\n", serializationResult.getValue());
                 }
                 case 0 -> {
                     result.setValue((short) 0);
