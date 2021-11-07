@@ -2,6 +2,8 @@ package LAB2;
 
 //Класс для запуска консольных меню
 
+import java.io.IOException;
+
 import static LAB2.Main.in;
 import static LAB2.Main.precision;
 
@@ -45,18 +47,20 @@ public class MenuLauncher {
                                   
                     Выберите команду:
                     1. Создать матрицу с заданным размером
-                    2. Создать матрицу на основе существующей
-                    3. Напечатать матрицу
-                    4. Найти элемент в матрице
-                    5. Привести матрицу к треугольному виду
-                    6. Напечатать элементы матрицы по типу знака
-                    7. Найти сумму элементов матрицы
-                    8. Сохранить матрицу
+                    2. Создать матрицу путем десериализации
+                    3. Создать матрицу по данным из файла
+                    4. Напечатать матрицу
+                    5. Найти элемент в матрице
+                    6. Привести матрицу к треугольному виду
+                    7. Напечатать элементы матрицы по типу знака
+                    8. Найти сумму элементов матрицы
+                    9. Сериализовать матрицу
+                    10. Вывести данные в файл
                     0. Выход""");
             do {
                 System.out.print("Введите здесь: ");
                 inputData = in.nextLine();
-                result = analyzer.analyze(inputData, (short) 0, (short) 8);
+                result = analyzer.analyze(inputData, (short) 0, (short) 10);
                 System.out.println(result.getMessage());
             } while (!result.getSuccessStatus());
 
@@ -80,8 +84,35 @@ public class MenuLauncher {
                     if (deserializationResult.getSuccessStatus())
                         matrix = (Matrix) deserializationResult.getValue();
                 }
-                case 3 -> System.out.println(matrix.toString() + String.format("Ваша матрица имеет размер %dx%d", matrix.getSize(), matrix.getSize()));
-                case 4 -> {
+                case 3 -> {
+                    System.out.print("Введите имя файла: ");
+                    inputData = in.nextLine();
+                    System.out.println("""
+                                Выберите тип файла:
+                                1. Текстовый
+                                2. Бинарный""");
+                    do{
+                        System.out.print("Введите здесь: ");
+                        String type = in.nextLine();
+                        result = analyzer.analyze(type, (short)1, (short)2);
+                    } while (!result.getSuccessStatus());
+
+                    try{
+                        matrix = new Matrix(inputData, result.getValue().byteValue());
+                        System.out.println("Матрица успешно создана!");
+                    }
+                    catch(IOException exception){
+                        System.out.printf("Ошибка при работе с файлом %s!%n", inputData);
+                    }
+                    catch (NumberFormatException exception){
+                        System.out.printf("Файл %s содержит недопустимые символы!%n", inputData);
+                    }
+                    catch (SecurityException exception){
+                        System.out.printf("Доступ к файлу %s запрещен!%n", inputData);
+                    }
+                }
+                case 4 -> System.out.println(matrix.toString() + String.format("Ваша матрица имеет размер %dx%d", matrix.getSize(), matrix.getSize()));
+                case 5 -> {
                     byte k;
                     short string;
                     short column;
@@ -104,26 +135,41 @@ public class MenuLauncher {
                     System.out.println(calculationResult.getMessage());
                     System.out.printf("Найденный элемент: %s\n", precision.format(calculationResult.getValue()));
                 }
-                case 5 -> {
+                case 6 -> {
                     matrix.convertToTriangle();
                     System.out.println("Матрица успешно приведена к треугольному виду!");
                 }
-                case 6 -> {
+                case 7 -> {
                     ProgrammeResult<String> groupResult = matrix.getSignGroups();
                     System.out.println(groupResult.getMessage());
                     System.out.println(groupResult.getValue());
                 }
-                case 7 -> {
+                case 8 -> {
                     ProgrammeResult<Double> calculationResult = matrix.calculateSum();
                     System.out.println(calculationResult.getMessage());
                     System.out.printf("Вычисленная сумма: %s\n", precision.format(calculationResult.getValue()));
                 }
-                case 8 -> {
+                case 9 -> {
                     System.out.print("Введите имя матрицы: ");
                     inputData = in.nextLine();
                     ProgrammeResult<String> serializationResult = matrix.serialize(inputData);
                     System.out.println(serializationResult.getMessage());
                     System.out.printf("Теперь вы можете создавать копии на основе матрицы: %s\n", serializationResult.getValue());
+                }
+                case 10 -> {
+                    System.out.print("Введите имя файла: ");
+                    inputData = in.nextLine();
+                    System.out.println("""
+                                Выберите тип файла:
+                                1. Текстовый
+                                2. Бинарный""");
+                    do{
+                        System.out.print("Введите здесь: ");
+                        String type = in.nextLine();
+                        result = analyzer.analyze(type, (short)1, (short)2);
+                    } while (!result.getSuccessStatus());
+
+                    System.out.println(matrix.writeToFile(inputData, result.getValue().byteValue()).getMessage());
                 }
                 case 0 -> {
                     result.setValue((short) 0);
@@ -146,18 +192,20 @@ public class MenuLauncher {
                                   
                     Выберите команду:
                     1. Создать объект с заданной строкой
-                    2. Создать объект на основе существующего
-                    3. Напечатать данные редактора
-                    4. Посчитать число слов в строке
-                    5. Разделить строку на слова
-                    6. Удалить каждое n-ое слово из строки
-                    7. Сохранить объект
+                    2. Создать объект путем десериализации
+                    3. Создать объект по данным из файла
+                    4. Напечатать данные редактора
+                    5. Посчитать число слов в строке
+                    6. Разделить строку на слова
+                    7. Удалить каждое n-ое слово из строки
+                    8. Сериализовать объект
+                    9. Вывести данные в файл
                     0. Выход""");
 
             do {
                 System.out.print("Введите здесь: ");
                 inputData = in.nextLine();
-                result = analyzer.analyze(inputData, (short) 0, (short) 7);
+                result = analyzer.analyze(inputData, (short) 0, (short) 9);
                 System.out.println(result.getMessage());
             } while (!result.getSuccessStatus());
 
@@ -179,13 +227,37 @@ public class MenuLauncher {
                     if (deserializationResult.getSuccessStatus())
                         stringEditor = (StringEditor) deserializationResult.getValue();
                 }
-                case 3 -> System.out.printf("Данные редактора: %s\n", stringEditor.getString());
-                case 4 -> {
+                case 3 -> {
+                    System.out.print("Введите имя файла: ");
+                    inputData = in.nextLine();
+                    System.out.println("""
+                                Выберите тип файла:
+                                1. Текстовый
+                                2. Бинарный""");
+                    do{
+                        System.out.print("Введите здесь: ");
+                        String type = in.nextLine();
+                        result = analyzer.analyze(type, (short)1, (short)2);
+                    } while (!result.getSuccessStatus());
+
+                    try{
+                        stringEditor = new StringEditor(inputData, result.getValue().byteValue());
+                        System.out.println("Объект успешно создан!");
+                    }
+                    catch(IOException exception){
+                        System.out.printf("Ошибка при работе с файлом %s!%n", inputData);
+                    }
+                    catch (SecurityException exception){
+                        System.out.printf("Доступ к файлу %s запрещен!%n", inputData);
+                    }
+                }
+                case 4 -> System.out.printf("Данные редактора: %s\n", stringEditor.getString());
+                case 5 -> {
                     ProgrammeResult<Short> countResult = stringEditor.countWords();
                     System.out.println(countResult.getMessage());
                     System.out.printf("Числов слов: %d\n", countResult.getValue());
                 }
-                case 5 -> {
+                case 6 -> {
                     ProgrammeResult<String[]> divisionResult = stringEditor.divide();
                     System.out.println(divisionResult.getMessage());
                     String[] words = divisionResult.getValue();
@@ -193,7 +265,7 @@ public class MenuLauncher {
                     for (int i = 0; i < words.length; ++i)
                         System.out.print((i != words.length - 1) ? words[i] + " " : words[i] + "\n");
                 }
-                case 6 -> {
+                case 7 -> {
                     do {
                         short wordsAmount = stringEditor.countWords().getValue();
                         System.out.printf("Введите позицию n, под которой будут удаляться слова (число от 1 до %d): ", wordsAmount);
@@ -205,12 +277,27 @@ public class MenuLauncher {
                     System.out.println(removalResult.getMessage());
                     System.out.printf("Полученная строка: %s\n", removalResult.getValue());
                 }
-                case 7 -> {
+                case 8 -> {
                     System.out.print("Введите имя объекта: ");
                     inputData = in.nextLine();
                     ProgrammeResult<String> serializationResult = stringEditor.serialize(inputData);
                     System.out.println(serializationResult.getMessage());
                     System.out.printf("Теперь вы можете создавать копии на основе объекта: %s\n", serializationResult.getValue());
+                }
+                case 9 -> {
+                    System.out.print("Введите имя файла: ");
+                    inputData = in.nextLine();
+                    System.out.println("""
+                                Выберите тип файла:
+                                1. Текстовый
+                                2. Бинарный""");
+                    do{
+                        System.out.print("Введите здесь: ");
+                        String type = in.nextLine();
+                        result = analyzer.analyze(type, (short)1, (short)2);
+                    } while (!result.getSuccessStatus());
+
+                    System.out.println(stringEditor.writeToFile(inputData, result.getValue().byteValue()).getMessage());
                 }
                 case 0 -> {
                     result.setValue((short) 0);

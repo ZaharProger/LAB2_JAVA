@@ -29,6 +29,35 @@ public class Matrix implements Serializable {
         fillMatrix(matrix.elements);
     }
 
+    public Matrix(String filename, byte type) throws IOException, NumberFormatException, SecurityException{
+        filename = "src//LAB2//" + filename;
+        filename += (type == 1)? ".txt" : ".bin";
+
+        if (type == 1)
+            try (BufferedReader reader = new BufferedReader(new FileReader(filename))){
+                size = Short.parseShort(reader.readLine());
+                elements = new double[size][size];
+                for (int i = 0; i < size; ++i){
+                    String[] row = reader.readLine().trim().split("[\\s]");
+                    for (int j = 0; j < size; ++j){
+                        elements[i][j] = Double.parseDouble(row[j]);
+                    }
+                }
+            }
+        else if (type == 2)
+            try (DataInputStream inputStream = new DataInputStream(new FileInputStream(filename))){
+                size = inputStream.readShort();
+                elements = new double[size][size];
+
+                for (int i = 0; i < size; ++i)
+                    for (int j = 0; j < size; ++j){
+                        String nums = "";
+                        nums += inputStream.readDouble();
+                        elements[i][j] = Double.parseDouble(nums);
+                    }
+            }
+    }
+
     public ProgrammeResult<String> serialize(String filename){
         String path = "src//LAB2//" + filename + ".ser";
         ProgrammeResult<String> result = new ProgrammeResult<>("Объект успешно сериализован!", true, filename);
@@ -63,6 +92,43 @@ public class Matrix implements Serializable {
         }
         if (result.getSuccessStatus())
             result.setValue(matrix);
+
+        return result;
+    }
+
+    public ProgrammeResult<String> writeToFile(String filename, byte type){
+        filename = "src//LAB2//" + filename;
+        filename += (type == 1)? ".txt" : ".bin";
+        ProgrammeResult<String> result = new ProgrammeResult<>("Запись в файл успешно завершена!", true, "");
+        if (type == 1){
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))){
+                String data = "";
+                data += size;
+                data += System.lineSeparator();
+                data += toString();
+                writer.write(data);
+            }
+            catch(IOException exception){
+                result.setMessage("Ошибка при работе с файлом!");
+                result.setSuccessStatus(false);
+            }
+        }
+        else if (type == 2){
+            try (DataOutputStream outputStream = new DataOutputStream(new FileOutputStream(filename))){
+                 outputStream.writeShort(size);
+                 for (double[] row : elements)
+                     for (double element : row)
+                         outputStream.writeDouble(element);
+            }
+            catch(IOException exception){
+                result.setMessage("Ошибка при работе с файлом!");
+                result.setSuccessStatus(false);
+            }
+            catch(SecurityException exception){
+                result.setMessage("Доступ к файлу запрещен!");
+                result.setSuccessStatus(false);
+            }
+        }
 
         return result;
     }
@@ -109,13 +175,12 @@ public class Matrix implements Serializable {
             short j = 0;
             while (j < size){
                 printedMatrix += precision.format(elements[i][j]);
-                printedMatrix += (j == size - 1)?"":" ";
+                printedMatrix += (j == size - 1)?System.lineSeparator():" ";
                 ++j;
             }
-            printedMatrix += '\n';
             ++i;
         }
-        return printedMatrix;
+        return printedMatrix.replace(',', '.');
     }
 
     public void convertToTriangle(){

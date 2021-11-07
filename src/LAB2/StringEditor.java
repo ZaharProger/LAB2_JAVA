@@ -4,6 +4,7 @@ package LAB2;
 
 import java.io.*;
 import java.util.StringTokenizer;
+import java.util.stream.Collectors;
 
 public class StringEditor implements Serializable {
     private String string;
@@ -25,6 +26,20 @@ public class StringEditor implements Serializable {
 
     public StringEditor(StringEditor stringEditor){
         string = stringEditor.string;
+    }
+
+    public StringEditor(String filename, byte type) throws IOException, SecurityException{
+        filename = "src//LAB2//" + filename;
+        filename += (type == 1)? ".txt" : ".bin";
+
+        if (type == 1)
+            try (BufferedReader reader = new BufferedReader(new FileReader(filename))){
+                string = reader.lines().collect(Collectors.joining());
+            }
+        else if (type == 2)
+            try (DataInputStream inputStream = new DataInputStream(new FileInputStream(filename))){
+                string = inputStream.readUTF();
+            }
     }
 
     public void setString(String string) {
@@ -69,6 +84,36 @@ public class StringEditor implements Serializable {
         }
         if (result.getSuccessStatus())
             result.setValue(stringEditor);
+
+        return result;
+    }
+
+    public ProgrammeResult<String> writeToFile(String filename, byte type){
+        filename = "src//LAB2//" + filename;
+        filename += (type == 1)? ".txt" : ".bin";
+        ProgrammeResult<String> result = new ProgrammeResult<>("Запись в файл успешно завершена!", true, "");
+        if (type == 1){
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))){
+                writer.write(string);
+            }
+            catch(IOException exception){
+                result.setMessage("Ошибка при работе с файлом!");
+                result.setSuccessStatus(false);
+            }
+        }
+        else if (type == 2){
+            try (DataOutputStream outputStream = new DataOutputStream(new FileOutputStream(filename))){
+                outputStream.writeUTF(string);
+            }
+            catch(IOException exception){
+                result.setMessage("Ошибка при работе с файлом!");
+                result.setSuccessStatus(false);
+            }
+            catch(SecurityException exception){
+                result.setMessage("Доступ к файлу запрещен!");
+                result.setSuccessStatus(false);
+            }
+        }
 
         return result;
     }
