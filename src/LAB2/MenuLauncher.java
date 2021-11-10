@@ -102,13 +102,10 @@ public class MenuLauncher {
                         System.out.println("Матрица успешно создана!");
                     }
                     catch(IOException exception){
-                        System.out.printf("Ошибка при работе с файлом %s!%n", inputData);
+                        System.out.printf("Файл %s не найден!%n", inputData);
                     }
                     catch (NumberFormatException exception){
                         System.out.printf("Файл %s содержит недопустимые символы!%n", inputData);
-                    }
-                    catch (SecurityException exception){
-                        System.out.printf("Доступ к файлу %s запрещен!%n", inputData);
                     }
                 }
                 case 4 -> System.out.println(matrix.toString() + String.format("Ваша матрица имеет размер %dx%d", matrix.getSize(), matrix.getSize()));
@@ -245,10 +242,7 @@ public class MenuLauncher {
                         System.out.println("Объект успешно создан!");
                     }
                     catch(IOException exception){
-                        System.out.printf("Ошибка при работе с файлом %s!%n", inputData);
-                    }
-                    catch (SecurityException exception){
-                        System.out.printf("Доступ к файлу %s запрещен!%n", inputData);
+                        System.out.printf("Файл %s не найден!%n", inputData);
                     }
                 }
                 case 4 -> System.out.printf("Данные редактора: %s\n", stringEditor.getString());

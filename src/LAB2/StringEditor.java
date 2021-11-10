@@ -28,7 +28,7 @@ public class StringEditor implements Serializable {
         string = stringEditor.string;
     }
 
-    public StringEditor(String filename, byte type) throws IOException, SecurityException{
+    public StringEditor(String filename, byte type) throws IOException{
         filename = "src//LAB2//" + filename;
         filename += (type == 1)? ".txt" : ".bin";
 
@@ -97,7 +97,7 @@ public class StringEditor implements Serializable {
                 writer.write(string);
             }
             catch(IOException exception){
-                result.setMessage("Ошибка при работе с файлом!");
+                result.setMessage("Файл не найден!");
                 result.setSuccessStatus(false);
             }
         }
@@ -106,11 +106,7 @@ public class StringEditor implements Serializable {
                 outputStream.writeUTF(string);
             }
             catch(IOException exception){
-                result.setMessage("Ошибка при работе с файлом!");
-                result.setSuccessStatus(false);
-            }
-            catch(SecurityException exception){
-                result.setMessage("Доступ к файлу запрещен!");
+                result.setMessage("Файл не найден!");
                 result.setSuccessStatus(false);
             }
         }

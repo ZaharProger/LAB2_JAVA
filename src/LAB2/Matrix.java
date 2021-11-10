@@ -29,7 +29,7 @@ public class Matrix implements Serializable {
         fillMatrix(matrix.elements);
     }
 
-    public Matrix(String filename, byte type) throws IOException, NumberFormatException, SecurityException{
+    public Matrix(String filename, byte type) throws IOException, NumberFormatException{
         filename = "src//LAB2//" + filename;
         filename += (type == 1)? ".txt" : ".bin";
 
@@ -109,7 +109,7 @@ public class Matrix implements Serializable {
                 writer.write(data);
             }
             catch(IOException exception){
-                result.setMessage("Ошибка при работе с файлом!");
+                result.setMessage("Файл не найден!");
                 result.setSuccessStatus(false);
             }
         }
@@ -121,11 +121,7 @@ public class Matrix implements Serializable {
                          outputStream.writeDouble(element);
             }
             catch(IOException exception){
-                result.setMessage("Ошибка при работе с файлом!");
-                result.setSuccessStatus(false);
-            }
-            catch(SecurityException exception){
-                result.setMessage("Доступ к файлу запрещен!");
+                result.setMessage("Файл не найден!");
                 result.setSuccessStatus(false);
             }
         }
